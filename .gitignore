@@ -1,3 +1,7 @@
+.rpt2_cache
+package-lock.json
+yarn.lock
+
 # Logs
 logs
 *.log
