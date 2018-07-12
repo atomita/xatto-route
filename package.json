@@ -14,7 +14,6 @@
     "bundle": "rollup --config",
     "bundle:clean": "rm -rf ./dist && npm run bundle",
     "minify": "uglifyjs dist/${npm_package_name}.js -o dist/${npm_package_name}.min.js -mc pure_funcs=['Object.defineProperty'] --source-map includeSources,url=dist/${npm_package_name}.min.js.map",
-    "prepare": "npm run build",
     "release": "npm run build && npm test && git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags && npm publish"
   },
   "husky": {
@@ -60,6 +59,6 @@
     "uglify-js": "^3.3.16"
   },
   "dependencies": {
-    "xatto": "^0.1.12"
+    "xatto": "^0.1.13"
   }
 }
