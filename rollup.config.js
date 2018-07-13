@@ -8,7 +8,7 @@ export default {
     file: `dist/${pkg.name}.js`,
     format: 'umd',
     name: pkg.name,
-    sourceMap: true,
+    sourcemap: true,
   },
   plugins: [typescript({
     exclude: [
