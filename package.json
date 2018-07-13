@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/xatto-route.min.js",
   "ts:main": "src/index.ts",
-  "types": "dist/index.d.ts",
+  "types": "dist/src/index.d.ts",
   "repository": "git@github.com:atomita/xatto-route.git",
   "author": "atomita",
   "license": "MIT",
