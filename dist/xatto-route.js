@@ -43,18 +43,18 @@
     function Route(_a, children) {
         var _b = _a.xa, context = _b.context, extra = _b.extra, attrs = __rest(_a, ["xa"]);
         var location = attrs.location || context.location || extra.location || window.location;
-        var flags = attrs.flags || null;
+        var flags = attrs.flags || '';
         var pattern = attrs.pattern;
         if (null == pattern) {
             pattern = '';
         }
         else if (pattern instanceof RegExp) {
-            flags = flags || pattern.flags || null;
+            flags = flags || pattern.flags || '';
             pattern = pattern.source;
         }
         pattern = pattern[0] === '^' ? pattern.slice(1) : pattern;
         pattern = pattern[0] === '/' ? pattern.slice(1) : pattern;
-        pattern = new RegExp("^/" + pattern, flags);
+        pattern = new RegExp("^/" + pattern);
         var match = pattern.exec(location.pathname);
         var child = children[0];
         return match && __assign({}, child, { attributes: __assign({}, child.attributes, { route: {
