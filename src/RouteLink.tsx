@@ -1,4 +1,4 @@
-import { x } from 'xatto'
+import { x, currentOnly } from 'xatto'
 
 function getOrigin(loc, location) {
   const protocol = (loc.protocol && ':' !== loc.protocol) ? loc.protocol : location.protocol
@@ -7,43 +7,52 @@ function getOrigin(loc, location) {
   return protocol + "//" + host
 }
 
-export function RouteLink({ xa: { extra }, ...attrs }, children) {
-  const href = attrs.href
-  const onclick = attrs.onclick
-
-  attrs.onclick = (e, ctx, ext) => {
-    if (onclick) {
-      onclick(e, ctx, ext)
-    }
-
-    if (!e.defaultPrevented
-      && e.button === 0
-      && !e.altKey
-      && !e.metaKey
-      && !e.ctrlKey
-      && !e.shiftKey
-      && attrs.target !== "_blank") {
-
-      return (mutate, context) => {
-        const location = attrs.location || context.location || extra.location || window.location
-
-        if (getOrigin(location, location) === getOrigin(e.currentTarget, location)) {
-          e.preventDefault()
-
-          const pathname = location.pathname
-          if (href !== pathname) {
-            history.pushState(pathname, "", href)
-
-            mutate()
-          }
-        }
-      }
-    }
-  }
+export function RouteLink({ xa: { extra }, ...props }: any, children) {
+  const href = props.href
+  const onclick = props.onclick
 
   return (
-    <a {...attrs}>
+    <a
+      {...props}
+
+      onclick={onClick}
+      tier={props}
+    >
       {children}
     </a>
   )
 }
+
+function onClick(context, detail, props, event) {
+  const newContext = onClickMain(context, detail, props, event)
+
+  if (props.tier.onclick) {
+    return props.tier.onclick(context, detail, props, event) || newContext
+  }
+
+  return newContext
+}
+
+const onClickMain = currentOnly((context, detail, props, event) => {
+  if (!event.defaultPrevented
+    && event.button === 0
+    && !event.altKey
+    && !event.metaKey
+    && !event.ctrlKey
+    && !event.shiftKey
+    && props.target !== "_blank") {
+
+    const location = props.location || context.location || props.xa.extra.location || window.location
+    if (getOrigin(location, location) === getOrigin(event.currentTarget, location)) {
+      event.preventDefault()
+
+      const href = props.href
+      const pathname = location.pathname
+      if (href !== pathname) {
+        history.pushState(pathname, "", href)
+
+        return {}  // mutate
+      }
+    }
+  }
+})

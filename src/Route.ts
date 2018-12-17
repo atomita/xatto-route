@@ -1,8 +1,10 @@
-export function Route({ xa: { context, extra }, ...attrs }, children) {
-  const location = attrs.location || context.location || extra.location || window.location
+import { x } from 'xatto'
 
-  let flags = attrs.flags || ''
-  let pattern: RegExp | string | undefined = attrs.pattern
+export function Route({ xa: { context, extra }, ...props }: any, children) {
+  const location = props.location || context.location || extra.location || document.location || window.location
+
+  let flags = props.flags || ''
+  let pattern: RegExp | string | undefined = props.pattern
 
   if (null == pattern) {
     pattern = ''
@@ -17,19 +19,20 @@ export function Route({ xa: { context, extra }, ...attrs }, children) {
 
   const match: any = pattern.exec(location.pathname)
 
-  const child = children[0]
-
-  return match && {
-    ...child,
-    attributes: {
-      ...child.attributes,
-      route: {
-        location,
-        match,
-        params: match.groups || {},
-        path: match[0],
-        pattern,
-      }
-    }
+  if (!match) {
+    return false
   }
+
+  const route = {
+    location,
+    match,
+    params: match.groups || {},
+    path: match[0],
+    pattern,
+  }
+
+  return x(x, {}, children.map(child => {
+    child.props.route = route
+    return child
+  }))
 }

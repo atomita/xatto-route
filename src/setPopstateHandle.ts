@@ -1,6 +1,6 @@
 export function setPopstateHandle(mutate: Function) {
   const handle = (e) => {
-    mutate()
+    mutate({})
   }
 
   addEventListener('popstate', handle)

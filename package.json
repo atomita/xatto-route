@@ -59,6 +59,6 @@
     "uglify-js": "^3.3.16"
   },
   "dependencies": {
-    "xatto": "^0.1.13"
+    "xatto": "^1.0.0"
   }
 }
