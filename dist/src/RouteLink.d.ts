@@ -1,6 +1,2 @@
-export declare function RouteLink({ xa: { extra }, ...attrs }: {
-    [x: string]: any;
-    xa: {
-        extra: any;
-    };
-}, children: any): any;
+import { VNode } from 'xatto/src/VNode';
+export declare function RouteLink({ xa: { extra }, ...props }: any, children: any): VNode;

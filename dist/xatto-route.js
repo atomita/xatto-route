@@ -1,3 +1,8 @@
+/*
+xatto-route v1.0.0
+https://github.com/atomita/xatto-route
+Released under the MIT License.
+*/
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('xatto')) :
     typeof define === 'function' && define.amd ? define(['exports', 'xatto'], factory) :
@@ -41,10 +46,10 @@
     }
 
     function Route(_a, children) {
-        var _b = _a.xa, context = _b.context, extra = _b.extra, attrs = __rest(_a, ["xa"]);
-        var location = attrs.location || context.location || extra.location || window.location;
-        var flags = attrs.flags || '';
-        var pattern = attrs.pattern;
+        var _b = _a.xa, context = _b.context, extra = _b.extra, props = __rest(_a, ["xa"]);
+        var location = props.location || context.location || extra.location || document.location || window.location;
+        var flags = props.flags || '';
+        var pattern = props.pattern;
         if (null == pattern) {
             pattern = '';
         }
@@ -56,14 +61,20 @@
         pattern = pattern[0] === '/' ? pattern.slice(1) : pattern;
         pattern = new RegExp("^/" + pattern);
         var match = pattern.exec(location.pathname);
-        var child = children[0];
-        return match && __assign({}, child, { attributes: __assign({}, child.attributes, { route: {
-                    location: location,
-                    match: match,
-                    params: match.groups || {},
-                    path: match[0],
-                    pattern: pattern,
-                } }) });
+        if (!match) {
+            return false;
+        }
+        var route = {
+            location: location,
+            match: match,
+            params: match.groups || {},
+            path: match[0],
+            pattern: pattern,
+        };
+        return xatto.x(xatto.x, {}, children.map(function (child) {
+            child.props.route = route;
+            return child;
+        }));
     }
 
     function getOrigin(loc, location) {
@@ -73,39 +84,40 @@
         return protocol + "//" + host;
     }
     function RouteLink(_a, children) {
-        var extra = _a.xa.extra, attrs = __rest(_a, ["xa"]);
-        var href = attrs.href;
-        var onclick = attrs.onclick;
-        attrs.onclick = function (e, ctx, ext) {
-            if (onclick) {
-                onclick(e, ctx, ext);
-            }
-            if (!e.defaultPrevented
-                && e.button === 0
-                && !e.altKey
-                && !e.metaKey
-                && !e.ctrlKey
-                && !e.shiftKey
-                && attrs.target !== "_blank") {
-                return function (mutate, context) {
-                    var location = attrs.location || context.location || extra.location || window.location;
-                    if (getOrigin(location, location) === getOrigin(e.currentTarget, location)) {
-                        e.preventDefault();
-                        var pathname = location.pathname;
-                        if (href !== pathname) {
-                            history.pushState(pathname, "", href);
-                            mutate();
-                        }
-                    }
-                };
-            }
-        };
-        return (xatto.x("a", __assign({}, attrs), children));
+        var extra = _a.xa.extra, props = __rest(_a, ["xa"]);
+        return (xatto.x("a", __assign({}, props, { onclick: onClick, tier: props }), children));
     }
+    function onClick(context, detail, props, event) {
+        var newContext = onClickMain(context, detail, props, event);
+        if (props.tier.onclick) {
+            return props.tier.onclick(context, detail, props, event) || newContext;
+        }
+        return newContext;
+    }
+    var onClickMain = xatto.currentOnly(function (context, detail, props, event) {
+        if (!event.defaultPrevented
+            && event.button === 0
+            && !event.altKey
+            && !event.metaKey
+            && !event.ctrlKey
+            && !event.shiftKey
+            && props.target !== "_blank") {
+            var location_1 = props.location || context.location || props.xa.extra.location || window.location;
+            if (getOrigin(location_1, location_1) === getOrigin(event.currentTarget, location_1)) {
+                event.preventDefault();
+                var href = props.href;
+                var pathname = location_1.pathname;
+                if (href !== pathname) {
+                    history.pushState(pathname, "", href);
+                    return {}; // mutate
+                }
+            }
+        }
+    });
 
     function setPopstateHandle(mutate) {
         var handle = function (e) {
-            mutate();
+            mutate({});
         };
         addEventListener('popstate', handle);
         return function () {

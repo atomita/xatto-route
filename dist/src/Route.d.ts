@@ -1,7 +1,1 @@
-export declare function Route({ xa: { context, extra }, ...attrs }: {
-    [x: string]: any;
-    xa: {
-        context: any;
-        extra: any;
-    };
-}, children: any): any;
+export declare function Route({ xa: { context, extra }, ...props }: any, children: any): false | import("xatto/dist/src/VNode").VNode;
