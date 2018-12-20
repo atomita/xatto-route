@@ -1,4 +1,5 @@
 import { x, currentOnly } from 'xatto'
+import { VNode } from 'xatto/src/VNode'
 
 function getOrigin(loc, location) {
   const protocol = (loc.protocol && ':' !== loc.protocol) ? loc.protocol : location.protocol
@@ -8,9 +9,6 @@ function getOrigin(loc, location) {
 }
 
 export function RouteLink({ xa: { extra }, ...props }: any, children) {
-  const href = props.href
-  const onclick = props.onclick
-
   return (
     <a
       {...props}
@@ -20,7 +18,7 @@ export function RouteLink({ xa: { extra }, ...props }: any, children) {
     >
       {children}
     </a>
-  )
+  ) as VNode
 }
 
 function onClick(context, detail, props, event) {
