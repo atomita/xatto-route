@@ -1,6 +1,6 @@
 {
   "name": "xatto-route",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "dist/xatto-route.min.js",
   "ts:main": "src/index.ts",

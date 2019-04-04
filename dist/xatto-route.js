@@ -1,5 +1,5 @@
 /*
-xatto-route v1.0.0
+xatto-route v1.0.1
 https://github.com/atomita/xatto-route
 Released under the MIT License.
 */
