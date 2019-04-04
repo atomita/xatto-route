@@ -31,7 +31,7 @@ function onClick(context, detail, props, event) {
   return newContext
 }
 
-const onClickMain = currentOnly((context, detail, props, event) => {
+function onClickMain (context, detail, props, event) {
   if (!event.defaultPrevented
     && event.button === 0
     && !event.altKey
@@ -53,4 +53,4 @@ const onClickMain = currentOnly((context, detail, props, event) => {
       }
     }
   }
-})
+}
