@@ -94,7 +94,7 @@ Released under the MIT License.
         }
         return newContext;
     }
-    var onClickMain = xatto.currentOnly(function (context, detail, props, event) {
+    function onClickMain(context, detail, props, event) {
         if (!event.defaultPrevented
             && event.button === 0
             && !event.altKey
@@ -113,7 +113,7 @@ Released under the MIT License.
                 }
             }
         }
-    });
+    }
 
     function setPopstateHandle(mutate) {
         var handle = function (e) {
